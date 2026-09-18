@@ -1,122 +1,421 @@
-[gd_scene load_steps=15 format=3 uid="uid://dmx3amr002"]
+[gd_scene load_steps=44 format=3 uid="uid://dmx3amr002"]
 
 [ext_resource type="Script" path="res://scripts/entities/amr_robot.gd" id="1_script"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chassis"]
-albedo_color = Color(0.12, 0.14, 0.18, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chassis_dark"]
+albedo_color = Color(0.11, 0.12, 0.15, 1)
+metallic = 0.7
 roughness = 0.25
-metallic = 0.65
 
-[sub_resource type="BoxMesh" id="BoxMesh_chassis"]
-material = SubResource("StandardMaterial3D_chassis")
-size = Vector3(1.15, 0.24, 0.88)
+[sub_resource type="BoxMesh" id="BoxMesh_base"]
+material = SubResource("StandardMaterial3D_chassis_dark")
+size = Vector3(0.95, 0.26, 1.45)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body_accent"]
-albedo_color = Color(0.96, 0.48, 0.05, 1)
-roughness = 0.35
-metallic = 0.3
-
-[sub_resource type="BoxMesh" id="BoxMesh_accent"]
-material = SubResource("StandardMaterial3D_body_accent")
-size = Vector3(0.9, 0.08, 0.7)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_led"]
-albedo_color = Color(0.0, 0.9, 1.0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_neon_strip"]
+albedo_color = Color(0.0, 0.85, 1.0, 1)
 emission_enabled = true
-emission = Color(0.0, 0.9, 1.0, 1)
-emission_energy_multiplier = 3.0
+emission = Color(0.0, 0.85, 1.0, 1)
+emission_energy_multiplier = 4.0
 
-[sub_resource type="TorusMesh" id="TorusMesh_led"]
-material = SubResource("StandardMaterial3D_led")
-inner_radius = 0.44
-outer_radius = 0.48
+[sub_resource type="BoxMesh" id="BoxMesh_side_strip"]
+material = SubResource("StandardMaterial3D_neon_strip")
+size = Vector3(0.025, 0.03, 1.4)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_turntable"]
-albedo_color = Color(0.2, 0.22, 0.25, 1)
-roughness = 0.3
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_headlight"]
+albedo_color = Color(0.9, 0.95, 1.0, 1)
+emission_enabled = true
+emission = Color(0.9, 0.95, 1.0, 1)
+emission_energy_multiplier = 4.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_light"]
+material = SubResource("StandardMaterial3D_headlight")
+size = Vector3(0.08, 0.04, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_arm_joint"]
+albedo_color = Color(0.18, 0.2, 0.24, 1)
 metallic = 0.85
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_turntable"]
-material = SubResource("StandardMaterial3D_turntable")
-top_radius = 0.38
-bottom_radius = 0.38
-height = 0.06
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lidar_sensor"]
-albedo_color = Color(0.05, 0.05, 0.06, 1)
 roughness = 0.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pedestal"]
+material = SubResource("StandardMaterial3D_arm_joint")
+top_radius = 0.18
+bottom_radius = 0.2
+height = 0.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_turret"]
+material = SubResource("StandardMaterial3D_arm_joint")
+top_radius = 0.24
+bottom_radius = 0.26
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_arm_white"]
+albedo_color = Color(0.86, 0.89, 0.92, 1)
+metallic = 0.25
+roughness = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm_boom"]
+material = SubResource("StandardMaterial3D_arm_white")
+size = Vector3(0.14, 1.02, 0.16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm_forearm"]
+material = SubResource("StandardMaterial3D_arm_white")
+size = Vector3(0.12, 0.86, 0.14)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gripper"]
+albedo_color = Color(0.22, 0.24, 0.28, 1)
 metallic = 0.9
+roughness = 0.2
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_lidar"]
-material = SubResource("StandardMaterial3D_lidar_sensor")
-top_radius = 0.08
-bottom_radius = 0.08
-height = 0.12
+[sub_resource type="BoxMesh" id="BoxMesh_gripper_base"]
+material = SubResource("StandardMaterial3D_gripper")
+size = Vector3(0.26, 0.06, 0.14)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_laser"]
-transparency = 1
-albedo_color = Color(0.0, 1.0, 0.9, 0.2)
-emission_enabled = true
-emission = Color(0.0, 1.0, 0.9, 1)
-emission_energy_multiplier = 2.0
+[sub_resource type="BoxMesh" id="BoxMesh_guide_bar"]
+material = SubResource("StandardMaterial3D_gripper")
+size = Vector3(0.74, 0.02, 0.02)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_laser_fan"]
-material = SubResource("StandardMaterial3D_laser")
-top_radius = 1.6
-bottom_radius = 1.6
-height = 0.01
+[sub_resource type="BoxMesh" id="BoxMesh_finger_bracket"]
+material = SubResource("StandardMaterial3D_gripper")
+size = Vector3(0.04, 0.04, 0.08)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wheel"]
-albedo_color = Color(0.08, 0.08, 0.08, 1)
-roughness = 0.8
+[sub_resource type="BoxMesh" id="BoxMesh_finger"]
+material = SubResource("StandardMaterial3D_arm_white")
+size = Vector3(0.03, 0.26, 0.14)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_wheel"]
-material = SubResource("StandardMaterial3D_wheel")
-top_radius = 0.1
-bottom_radius = 0.1
-height = 0.06
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pad"]
+albedo_color = Color(1.0, 0.45, 0.05, 1)
+roughness = 0.9
 
-[node name="AmrRobot" type="Node3D"]
+[sub_resource type="BoxMesh" id="BoxMesh_pad"]
+material = SubResource("StandardMaterial3D_pad")
+size = Vector3(0.015, 0.18, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_caster"]
+albedo_color = Color(0.06, 0.06, 0.07, 1)
+metallic = 0.9
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_caster"]
+material = SubResource("StandardMaterial3D_caster")
+top_radius = 0.07
+bottom_radius = 0.07
+height = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tray_bed"]
+albedo_color = Color(0.16, 0.18, 0.21, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_tray_bed"]
+material = SubResource("StandardMaterial3D_tray_bed")
+size = Vector3(0.7, 0.02, 0.85)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tray_rail"]
+albedo_color = Color(0.3, 0.34, 0.38, 1)
+metallic = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_tray_rail_side"]
+material = SubResource("StandardMaterial3D_tray_rail")
+size = Vector3(0.03, 0.12, 0.85)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tray_rail_end"]
+material = SubResource("StandardMaterial3D_tray_rail")
+size = Vector3(0.7, 0.12, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tray_divider"]
+material = SubResource("StandardMaterial3D_tray_rail")
+size = Vector3(0.7, 0.06, 0.02)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tray_floor"]
+size = Vector3(0.7, 0.02, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tray_rail_side"]
+size = Vector3(0.03, 0.12, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tray_rail_end"]
+size = Vector3(0.7, 0.12, 0.03)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tray_divider"]
+size = Vector3(0.7, 0.06, 0.02)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_slot_sensor"]
+size = Vector3(0.5, 0.28, 0.32)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_reticle"]
+shading_mode = 0
+albedo_color = Color(0, 0.9, 1, 0.9)
+
+[sub_resource type="TorusMesh" id="TorusMesh_reticle"]
+material = SubResource("StandardMaterial3D_reticle")
+inner_radius = 0.4
+outer_radius = 0.46
+rings = 32
+ring_segments = 16
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_chassis"]
+size = Vector3(0.95, 0.32, 1.45)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pedestal"]
+height = 0.2
+radius = 0.18
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_turret"]
+height = 0.1
+radius = 0.24
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_arm_boom"]
+size = Vector3(0.14, 1.02, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_arm_forearm"]
+size = Vector3(0.12, 0.86, 0.14)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gripper"]
+size = Vector3(0.28, 0.08, 0.14)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_finger"]
+size = Vector3(0.04, 0.26, 0.14)
+
+[node name="AmrRobot" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 15
 script = ExtResource("1_script")
 
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
+shape = SubResource("BoxShape3D_chassis")
+
 [node name="Chassis" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14, 0)
-mesh = SubResource("BoxMesh_chassis")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+mesh = SubResource("BoxMesh_base")
 
-[node name="AccentCover" type="MeshInstance3D" parent="Chassis"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
-mesh = SubResource("BoxMesh_accent")
+[node name="SideLedStripLeft" type="MeshInstance3D" parent="Chassis"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.48, 0, 0)
+mesh = SubResource("BoxMesh_side_strip")
 
-[node name="LedRing" type="MeshInstance3D" parent="Chassis"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.06, 0)
-mesh = SubResource("TorusMesh_led")
+[node name="SideLedStripRight" type="MeshInstance3D" parent="Chassis"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48, 0, 0)
+mesh = SubResource("BoxMesh_side_strip")
 
-[node name="ElevatingTurntable" type="MeshInstance3D" parent="Chassis"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
-mesh = SubResource("CylinderMesh_turntable")
+[node name="HeadlightLeft" type="MeshInstance3D" parent="Chassis"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, -0.04, -0.73)
+mesh = SubResource("BoxMesh_light")
 
-[node name="LidarTurret" type="MeshInstance3D" parent="Chassis"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.15, 0)
-mesh = SubResource("CylinderMesh_lidar")
+[node name="HeadlightRight" type="MeshInstance3D" parent="Chassis"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, -0.04, -0.73)
+mesh = SubResource("BoxMesh_light")
 
-[node name="LaserScanPlane" type="MeshInstance3D" parent="Chassis/LidarTurret"]
+[node name="CargoTray" type="Node3D" parent="Chassis"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14, 0.25)
+
+[node name="TrayBed" type="MeshInstance3D" parent="Chassis/CargoTray"]
+mesh = SubResource("BoxMesh_tray_bed")
+
+[node name="RailLeft" type="MeshInstance3D" parent="Chassis/CargoTray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0.06, 0)
+mesh = SubResource("BoxMesh_tray_rail_side")
+
+[node name="RailRight" type="MeshInstance3D" parent="Chassis/CargoTray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0.06, 0)
+mesh = SubResource("BoxMesh_tray_rail_side")
+
+[node name="RailRear" type="MeshInstance3D" parent="Chassis/CargoTray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0.425)
+mesh = SubResource("BoxMesh_tray_rail_end")
+
+[node name="DividerCenter" type="MeshInstance3D" parent="Chassis/CargoTray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+mesh = SubResource("BoxMesh_tray_divider")
+
+[node name="TrayBody" type="AnimatableBody3D" parent="Chassis/CargoTray"]
+collision_layer = 32
+collision_mask = 24
+
+[node name="ColTrayFloor" type="CollisionShape3D" parent="Chassis/CargoTray/TrayBody"]
+shape = SubResource("BoxShape3D_tray_floor")
+
+[node name="ColRailLeft" type="CollisionShape3D" parent="Chassis/CargoTray/TrayBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0.06, 0)
+shape = SubResource("BoxShape3D_tray_rail_side")
+
+[node name="ColRailRight" type="CollisionShape3D" parent="Chassis/CargoTray/TrayBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0.06, 0)
+shape = SubResource("BoxShape3D_tray_rail_side")
+
+[node name="ColRailRear" type="CollisionShape3D" parent="Chassis/CargoTray/TrayBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0.425)
+shape = SubResource("BoxShape3D_tray_rail_end")
+
+[node name="ColDividerCenter" type="CollisionShape3D" parent="Chassis/CargoTray/TrayBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+shape = SubResource("BoxShape3D_tray_divider")
+
+[node name="Slot1Marker" type="Marker3D" parent="Chassis/CargoTray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, -0.22)
+
+[node name="Slot2Marker" type="Marker3D" parent="Chassis/CargoTray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, 0.22)
+
+[node name="Slot1Sensor" type="Area3D" parent="Chassis/CargoTray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, -0.22)
+collision_layer = 0
+collision_mask = 8
+
+[node name="ColSensor1" type="CollisionShape3D" parent="Chassis/CargoTray/Slot1Sensor"]
+shape = SubResource("BoxShape3D_slot_sensor")
+
+[node name="Slot2Sensor" type="Area3D" parent="Chassis/CargoTray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, 0.22)
+collision_layer = 0
+collision_mask = 8
+
+[node name="ColSensor2" type="CollisionShape3D" parent="Chassis/CargoTray/Slot2Sensor"]
+shape = SubResource("BoxShape3D_slot_sensor")
+
+[node name="RoboticArm" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, -0.42)
+
+[node name="ArmBaseBody" type="AnimatableBody3D" parent="RoboticArm"]
+collision_layer = 16
+collision_mask = 43
+
+[node name="ColPedestal" type="CollisionShape3D" parent="RoboticArm/ArmBaseBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+shape = SubResource("CylinderShape3D_pedestal")
+
+[node name="ColTurret" type="CollisionShape3D" parent="RoboticArm/ArmBaseBody"]
+shape = SubResource("CylinderShape3D_turret")
+
+[node name="PedestalMast" type="MeshInstance3D" parent="RoboticArm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("CylinderMesh_pedestal")
+
+[node name="TurretBase" type="MeshInstance3D" parent="RoboticArm"]
+mesh = SubResource("CylinderMesh_turret")
+
+[node name="ShoulderJoint" type="Node3D" parent="RoboticArm"]
+transform = Transform3D(1, 0, 0, 0, 0.374607, 0.927184, 0, -0.927184, 0.374607, 0, 0.18, 0)
+
+[node name="BoomBody" type="AnimatableBody3D" parent="RoboticArm/ShoulderJoint"]
+collision_layer = 16
+collision_mask = 43
+
+[node name="ColBoom" type="CollisionShape3D" parent="RoboticArm/ShoulderJoint/BoomBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.51, 0)
+shape = SubResource("BoxShape3D_arm_boom")
+
+[node name="BoomMesh" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.51, 0)
+mesh = SubResource("BoxMesh_arm_boom")
+
+[node name="ElbowJoint" type="Node3D" parent="RoboticArm/ShoulderJoint"]
+transform = Transform3D(1, 0, 0, 0, -0.766044, -0.642788, 0, 0.642788, -0.766044, 0, 1.02, 0)
+
+[node name="ForearmBody" type="AnimatableBody3D" parent="RoboticArm/ShoulderJoint/ElbowJoint"]
+collision_layer = 16
+collision_mask = 43
+
+[node name="ColForearm" type="CollisionShape3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/ForearmBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43, 0)
+shape = SubResource("BoxShape3D_arm_forearm")
+
+[node name="ForearmMesh" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43, 0)
+mesh = SubResource("BoxMesh_arm_forearm")
+
+[node name="WristJoint" type="Node3D" parent="RoboticArm/ShoulderJoint/ElbowJoint"]
+transform = Transform3D(1, 0, 0, 0, 0.309017, 0.951057, 0, -0.951057, 0.309017, 0, 0.86, 0)
+
+[node name="GripperBody" type="AnimatableBody3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint"]
+collision_layer = 16
+collision_mask = 43
+
+[node name="ColGripper" type="CollisionShape3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/GripperBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
-mesh = SubResource("CylinderMesh_laser_fan")
+shape = SubResource("BoxShape3D_gripper")
 
-[node name="WheelLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.1, -0.46)
-mesh = SubResource("CylinderMesh_wheel")
+[node name="GripperBase" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+mesh = SubResource("BoxMesh_gripper_base")
 
-[node name="WheelRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.1, 0.46)
-mesh = SubResource("CylinderMesh_wheel")
+[node name="GuideBar" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+mesh = SubResource("BoxMesh_guide_bar")
+
+[node name="FingerLeft" type="Node3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16, 0.08, 0)
+
+[node name="FingerLeftBody" type="AnimatableBody3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerLeft"]
+collision_layer = 16
+collision_mask = 43
+
+[node name="ColFingerLeft" type="CollisionShape3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerLeft/FingerLeftBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
+shape = SubResource("BoxShape3D_finger")
+
+[node name="Bracket" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerLeft"]
+mesh = SubResource("BoxMesh_finger_bracket")
+
+[node name="FingerMesh" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
+mesh = SubResource("BoxMesh_finger")
+
+[node name="PadMesh" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0.13, 0)
+mesh = SubResource("BoxMesh_pad")
+
+[node name="FingerRight" type="Node3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 0.08, 0)
+
+[node name="FingerRightBody" type="AnimatableBody3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerRight"]
+collision_layer = 16
+collision_mask = 43
+
+[node name="ColFingerRight" type="CollisionShape3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerRight/FingerRightBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
+shape = SubResource("BoxShape3D_finger")
+
+[node name="Bracket" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerRight"]
+mesh = SubResource("BoxMesh_finger_bracket")
+
+[node name="FingerMesh" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
+mesh = SubResource("BoxMesh_finger")
+
+[node name="PadMesh" type="MeshInstance3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint/FingerRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, 0.13, 0)
+mesh = SubResource("BoxMesh_pad")
+
+[node name="GrippedBoxSocket" type="Node3D" parent="RoboticArm/ShoulderJoint/ElbowJoint/WristJoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+
+[node name="TargetReticle" type="Node3D" parent="."]
+visible = false
+
+[node name="ReticleRing" type="MeshInstance3D" parent="TargetReticle"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.02, 0)
+mesh = SubResource("TorusMesh_reticle")
+
+[node name="CasterFL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.38, 0.07, -0.55)
+mesh = SubResource("CylinderMesh_caster")
+
+[node name="CasterFR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.38, 0.07, -0.55)
+mesh = SubResource("CylinderMesh_caster")
+
+[node name="CasterRL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.38, 0.07, 0.55)
+mesh = SubResource("CylinderMesh_caster")
+
+[node name="CasterRR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.38, 0.07, 0.55)
+mesh = SubResource("CylinderMesh_caster")
 
 [node name="StatusBadge" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
 billboard = 1
 modulate = Color(1, 1, 1, 1)
 outline_modulate = Color(0, 0, 0, 1)
-text = "AMR-01 [IDLE]
+text = "DEV-01 [MANUAL BOT]
 ⚡ 100% | VDA 5050"
-font_size = 24
-outline_size = 14
+font_size = 14
+outline_size = 4

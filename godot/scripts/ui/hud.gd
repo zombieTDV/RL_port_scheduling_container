@@ -11,6 +11,9 @@ signal reset_requested
 signal auto_fleet_toggled(enabled: bool)
 signal camera_preset_requested(preset_idx: int)
 signal fullscreen_toggled
+signal chase_cam_toggled
+signal cutaway_toggled
+signal spawn_dev_bot_requested(location: String)
 
 @onready var lbl_pick_rate: Label = $TopBar/KPIContainer/CardPickRate/ValPickRate
 @onready var lbl_active_fleet: Label = $TopBar/KPIContainer/CardFleet/ValFleet
@@ -47,14 +50,18 @@ signal fullscreen_toggled
 # Controls
 @onready var btn_inbound: Button = $BottomBar/Controls/BtnInbound
 @onready var btn_outbound: Button = $BottomBar/Controls/BtnOutbound
-@onready var btn_conflict: Button = $BottomBar/Controls/BtnConflict
-@onready var btn_auto: Button = $BottomBar/Controls/BtnAuto
+@onready var btn_dev_cam: Button = $BottomBar/Controls/BtnDevCam
+@onready var btn_spawn_center: Button = $BottomBar/Controls/BtnSpawnCenter
+@onready var btn_spawn_dock: Button = $BottomBar/Controls/BtnSpawnDock
+@onready var btn_spawn_pick: Button = $BottomBar/Controls/BtnSpawnPick
 @onready var btn_reset: Button = $BottomBar/Controls/BtnReset
 @onready var btn_fullscreen: Button = $BottomBar/Controls/BtnFullscreen
 @onready var btn_cam1: Button = $BottomBar/Controls/BtnCam1
 @onready var btn_cam2: Button = $BottomBar/Controls/BtnCam2
 @onready var btn_cam3: Button = $BottomBar/Controls/BtnCam3
 @onready var btn_cam4: Button = $BottomBar/Controls/BtnCam4
+@onready var btn_cam5: Button = $BottomBar/Controls/BtnCam5
+@onready var btn_cutaway: Button = $BottomBar/Controls/BtnCutaway
 @onready var log_panel: Panel = $LogPanel
 @onready var log_box: RichTextLabel = $LogPanel/LogBox
 
@@ -63,26 +70,76 @@ var _raw_log_lines: Array[String] = []
 
 func _ready() -> void:
 	if btn_inbound:
-		btn_inbound.pressed.connect(func(): dispatch_inbound_requested.emit())
+		btn_inbound.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			dispatch_inbound_requested.emit()
+		)
 	if btn_outbound:
-		btn_outbound.pressed.connect(func(): dispatch_outbound_requested.emit())
-	if btn_conflict:
-		btn_conflict.pressed.connect(func(): conflict_demo_requested.emit())
-	if btn_auto:
-		btn_auto.pressed.connect(_on_auto_pressed)
+		btn_outbound.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			dispatch_outbound_requested.emit()
+		)
+	if btn_dev_cam:
+		btn_dev_cam.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_toggle)
+			chase_cam_toggled.emit()
+		)
+	if btn_spawn_center:
+		btn_spawn_center.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			spawn_dev_bot_requested.emit("CENTER")
+		)
+	if btn_spawn_dock:
+		btn_spawn_dock.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			spawn_dev_bot_requested.emit("DOCK")
+		)
+	if btn_spawn_pick:
+		btn_spawn_pick.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			spawn_dev_bot_requested.emit("PICK")
+		)
 	if btn_reset:
-		btn_reset.pressed.connect(func(): reset_requested.emit())
+		btn_reset.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_cancel)
+			reset_requested.emit()
+		)
 	if btn_fullscreen:
-		btn_fullscreen.pressed.connect(func(): fullscreen_toggled.emit())
+		btn_fullscreen.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_toggle)
+			fullscreen_toggled.emit()
+		)
 
 	if btn_cam1:
-		btn_cam1.pressed.connect(func(): camera_preset_requested.emit(1))
+		btn_cam1.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			camera_preset_requested.emit(1)
+		)
 	if btn_cam2:
-		btn_cam2.pressed.connect(func(): camera_preset_requested.emit(2))
+		btn_cam2.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			camera_preset_requested.emit(2)
+		)
 	if btn_cam3:
-		btn_cam3.pressed.connect(func(): camera_preset_requested.emit(3))
+		btn_cam3.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			camera_preset_requested.emit(3)
+		)
 	if btn_cam4:
-		btn_cam4.pressed.connect(func(): camera_preset_requested.emit(4))
+		btn_cam4.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			camera_preset_requested.emit(4)
+		)
+	if btn_cam5:
+		btn_cam5.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_click)
+			camera_preset_requested.emit(5)
+		)
+	if btn_cutaway:
+		btn_cutaway.pressed.connect(func():
+			SoundManager.play_ui(self, SoundManager.sfx_toggle)
+			cutaway_toggled.emit()
+		)
 
 	if log_box:
 		log_box.gui_input.connect(_on_log_gui_input)
@@ -190,10 +247,3 @@ func copy_logs_to_clipboard() -> void:
 
 	DisplayServer.clipboard_set(full_text)
 	log_event("[color=lime]📋 Logs copied to clipboard (%d entries)![/color]" % _raw_log_lines.size())
-
-func _on_auto_pressed() -> void:
-	is_auto_fleet = not is_auto_fleet
-	if btn_auto:
-		btn_auto.text = "Pause Cycle" if is_auto_fleet else "Auto In/Out"
-	auto_fleet_toggled.emit(is_auto_fleet)
-	log_event("[color=yellow]Continuous autonomous Inbound/Outbound cycle: %s[/color]" % str(is_auto_fleet))
